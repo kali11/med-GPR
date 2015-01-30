@@ -74,4 +74,7 @@ void tests()
 	if(GRMUtils::isSubsetOfTransactionList(set2, set1)) cout << "isSubsetOfTransactionList ERROR" << endl;
 	cout << "koniec testow" << endl;
 
+	// test getListProduct
+	if(GRMUtils::getListProduct(set1, set2).size() != 1) cout << "getListProduct ERROR" << endl;
+
 }

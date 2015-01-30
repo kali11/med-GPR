@@ -13,6 +13,10 @@ public:
 	bool static isSubsetOfTransactionList(set<int> list1, set<int> list2);
 	// czy listy id transakcji sa rowne
 	bool static isTransactionListsEqual(set<int> list1, set<int> list2);
+	// zwraca czesc wspolna list id transakcji
+	set<int> static getListProduct(set<int> list1, set<int> list2);
+
+	vector<bool> static joinItems(vector<bool> items1, vector<bool> items2);
 	GRMUtils(void);
 	~GRMUtils(void);
 };
