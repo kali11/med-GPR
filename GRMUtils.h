@@ -17,6 +17,8 @@ public:
 	set<int> static getListProduct(set<int> list1, set<int> list2);
 
 	vector<bool> static joinItems(vector<bool> items1, vector<bool> items2);
+
+	void static addList2ToList1(set<vector<bool>>& list1, set<vector<bool>>& list2);
 	GRMUtils(void);
 	~GRMUtils(void);
 };

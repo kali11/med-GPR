@@ -4,6 +4,7 @@
 #include "TestDatastore.h"
 #include <vector>
 #include <set>
+#include "GRM.h"
 
 using namespace std;
 
@@ -13,7 +14,9 @@ int main(int argc, char *argv[])
 {
 	cout << "main" << endl;
 
-	tests();
+	//tests();
+	GRM grm;
+	grm.GRMAlgoritm(1);
 	system("PAUSE");
 	return 0;
 }

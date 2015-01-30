@@ -4,6 +4,7 @@
 GRM::GRM(void)
 {
 	datastore = NULL;
+	root = shared_ptr<Node>(new Node());
 }
 
 
@@ -48,8 +49,8 @@ void GRM::GRMAlgoritm(unsigned minSup)
                 root->children.push_back(N);
             }
 
-            GARM(root, minSup);
         }
+		GARM(root, minSup);
     }
 }
 
@@ -57,23 +58,26 @@ void GRM::GARM(shared_ptr<Node> n, unsigned minSup)
 {
     set<vector<bool>> temp;
 
-    for (int i = 0; i < n->children.size() - 1; ++i) {
+    for (int i = 0; i < ((int)n->children.size()) - 1; ++i) {
         for (int j = i + 1; j < n->children.size(); ++j) {
             GarmProperty(n, n->children[i], n->children[j]);
         }
 
-        temp.clear();
-        temp = n->items;
-        n->items.clear();
-        set_union(temp.begin(), temp.end(), n->children[i]->items.begin(), n->children[i]->items.end(), inserter(n->items, n->items.begin()));
+        //temp.clear();
+        //temp = n->items;
+        //n->items.clear();
+        //set_union(temp.begin(), temp.end(), n->children[i]->items.begin(), n->children[i]->items.end(), inserter(n->items, n->items.end()));
+		GRMUtils::addList2ToList1(n->children[i]->items, n->items);
 
         for (int j = 0; j < n->children[i]->children.size(); ++j) {
             if (n->children[i]->children[j]->transactionList.size() <= minSup) {
-                temp.clear();
-                temp = n->children[i]->children[j]->items;
-                n->children[i]->children[j]->items.clear();
-                set_union(temp.begin(), temp.end(), n->children[i]->items.begin(), n->children[i]->items.end(), inserter( n->children[i]->children[j]->items, n->children[i]->children[j]->items.begin()));
-                n->children[i]->children.erase(n->children[i]->children.begin() + j);
+                //temp.clear();
+                //temp = n->children[i]->children[j]->items;
+                //n->children[i]->children[j]->items.clear();
+				//std::insert_iterator<set<vector<bool>>> x = inserter(n->children[i]->children[j]->items, n->children[i]->children[j]->items.begin());
+                //set_union(temp.begin(), temp.end(), n->children[i]->items.begin(), n->children[i]->items.end(), x);
+				GRMUtils::addList2ToList1(n->children[i]->children[j]->items, n->children[i]->items);
+				n->children[i]->children.erase(n->children[i]->children.begin() + j);
                 --j;
             }
         }
@@ -94,9 +98,11 @@ void GRM::GarmProperty(shared_ptr<Node> n, shared_ptr<Node> ln, shared_ptr<Node>
 	}
 	if(!GRMUtils::isSubsetOfTransactionList((*ln).transactionList, (*rn).transactionList))
 	{
-		Node node = *rn;
-		node.cartesianProduct((*rn).items);
-		shared_ptr<Node> node_ptr(&node);
+		Node* node = new Node();
+		node->transactionList = GRMUtils::getListProduct((*ln).transactionList, (*rn).transactionList);
+		memcpy(node, &(*rn), sizeof(node));
+		node->cartesianProduct((*ln).items);
+		shared_ptr<Node> node_ptr(node);
 		(*ln).children.push_back(node_ptr);
 
 	}
