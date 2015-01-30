@@ -3,6 +3,7 @@
 
 Transaction::Transaction()
 {
+    items.resize(27, false);
 }
 
 

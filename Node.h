@@ -15,7 +15,11 @@ public:
 	set<vector<bool>> items;
 	shared_ptr<Node> parent;
 	vector<shared_ptr<Node>> children;
-	set<int> transactionList; // zbior id transakcji
+	set<int> transactionList; // zbior id transakcjii
+
+    unsigned int groupId;
+    bool seenBefore;
+
 	Node(void);
 	~Node(void);
 	void cartesianProduct(set<vector<bool>> itemsToAdd);
