@@ -33,7 +33,7 @@ Transaction Datastore::createTransactionFromLine(string line)
 	auto start = 0U;
 	auto end = line.find(",");
 	string element;
-	for(int i = 0; i < 10; i++)
+	for(int i = 0; i < 9; i++)
 	{
 		element = line.substr(start, end - start);
 		start = end + 1;
