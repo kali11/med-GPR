@@ -78,10 +78,16 @@ vector<bool> GRMUtils::joinItems(vector<bool> items1, vector<bool> items2)
 	return result;
 }
 
-void GRMUtils::addList2ToList1(set<vector<bool>>& list1, set<vector<bool>>& list2)
+set<vector<bool>> GRMUtils::addList2ToList1(set<vector<bool>> list1, set<vector<bool>> list2)
 {
+	set<vector<bool>> result;
+	for(auto it = list1.begin(); it != list1.end(); ++it)
+	{
+		result.insert(*it);
+	}
 	for(auto it = list2.begin(); it != list2.end(); ++it)
 	{
-		list1.insert(*it);
+		result.insert(*it);
 	}
+	return result;
 }

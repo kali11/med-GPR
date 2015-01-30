@@ -67,7 +67,7 @@ void GRM::GARM(shared_ptr<Node> n, unsigned minSup)
         //temp = n->items;
         //n->items.clear();
         //set_union(temp.begin(), temp.end(), n->children[i]->items.begin(), n->children[i]->items.end(), inserter(n->items, n->items.end()));
-		GRMUtils::addList2ToList1(n->children[i]->items, n->items);
+		n->children[i]->items = GRMUtils::addList2ToList1(n->children[i]->items, n->items);
 
         for (int j = 0; j < n->children[i]->children.size(); ++j) {
             if (n->children[i]->children[j]->transactionList.size() <= minSup) {
@@ -76,7 +76,7 @@ void GRM::GARM(shared_ptr<Node> n, unsigned minSup)
                 //n->children[i]->children[j]->items.clear();
 				//std::insert_iterator<set<vector<bool>>> x = inserter(n->children[i]->children[j]->items, n->children[i]->children[j]->items.begin());
                 //set_union(temp.begin(), temp.end(), n->children[i]->items.begin(), n->children[i]->items.end(), x);
-				GRMUtils::addList2ToList1(n->children[i]->children[j]->items, n->children[i]->items);
+				n->children[i]->children[j]->items = GRMUtils::addList2ToList1(n->children[i]->children[j]->items, n->children[i]->items);
 				n->children[i]->children.erase(n->children[i]->children.begin() + j);
                 --j;
             }

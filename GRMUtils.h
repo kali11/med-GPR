@@ -18,7 +18,7 @@ public:
 
 	vector<bool> static joinItems(vector<bool> items1, vector<bool> items2);
 
-	void static addList2ToList1(set<vector<bool>>& list1, set<vector<bool>>& list2);
+	set<vector<bool>> static addList2ToList1(set<vector<bool>> list1, set<vector<bool>> list2);
 	GRMUtils(void);
 	~GRMUtils(void);
 };

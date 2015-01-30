@@ -32,5 +32,11 @@ void Node::cartesianProduct(set<vector<bool>> itemsToAdd)
 			result.insert(GRMUtils::joinItems(*it, *it2));
 		}
 	}
-	items = result;
+	if(items.size() > 0)
+		items.clear();
+
+	for(auto it = result.begin(); it != result.end(); ++it)
+	{
+		items.insert(*it);
+	}
 }
