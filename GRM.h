@@ -12,9 +12,9 @@ class GRM
 private:
 	set<vector<bool>> FG;
     shared_ptr<Node> root;
-	AbstractDatastore& datastore;
+	AbstractDatastore* datastore;
 public:
-	GRM();
+	GRM(void);
 	~GRM(void);
 	void GRMAlgoritm(unsigned minSup);
     void GARM(shared_ptr<Node>, unsigned);

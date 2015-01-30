@@ -4,6 +4,7 @@
 #include "TestDatastore.h"
 #include <vector>
 #include <set>
+#include "GRM.h"
 
 using namespace std;
 
@@ -13,7 +14,9 @@ int main(int argc, char *argv[])
 {
 	cout << "main" << endl;
 
-	tests();
+	//tests();
+	GRM grm;
+	grm.GRMAlgoritm(1);
 	system("PAUSE");
 	return 0;
 }
@@ -73,5 +76,8 @@ void tests()
 	if(GRMUtils::isSubsetOfTransactionList(set1, set2)) cout << "isSubsetOfTransactionList ERROR" << endl;
 	if(GRMUtils::isSubsetOfTransactionList(set2, set1)) cout << "isSubsetOfTransactionList ERROR" << endl;
 	cout << "koniec testow" << endl;
+
+	// test getListProduct
+	if(GRMUtils::getListProduct(set1, set2).size() != 1) cout << "getListProduct ERROR" << endl;
 
 }

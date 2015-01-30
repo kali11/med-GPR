@@ -3,6 +3,7 @@
 #include <vector>
 #include "Transaction.h"
 #include <set>
+#include "GRMUtils.h"
 
 using namespace std;
 
@@ -21,6 +22,6 @@ public:
 
 	Node(void);
 	~Node(void);
-	void addToItems(vector<bool> itemsToAdd);
+	void cartesianProduct(set<vector<bool>> itemsToAdd);
 	void removeChild(shared_ptr<Node> toRemove);
 };
