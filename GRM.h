@@ -11,12 +11,13 @@ class GRM
 {
 private:
 	set<vector<bool>> FG;
-	set<vector<bool>> GBD;
+    shared_ptr<Node> root;
 	AbstractDatastore& datastore;
 public:
 	GRM();
 	~GRM(void);
 	void GRMAlgoritm(unsigned minSup);
+    void GARM(shared_ptr<Node>, unsigned);
 	void GarmProperty(shared_ptr<Node> n, shared_ptr<Node> ln, shared_ptr<Node> rn);
 };
 
