@@ -3,6 +3,8 @@
 
 Node::Node(void)
 {
+    oneClassOnly = true;
+    groupId = -1;
 }
 
 

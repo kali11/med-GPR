@@ -16,8 +16,8 @@ public:
 	vector<shared_ptr<Node>> children;
 	set<int> transactionList; // zbior id transakcjii
 
-    unsigned int groupId;
-    bool seenBefore;
+    int groupId;
+    bool oneClassOnly;
 
 	Node(void);
 	~Node(void);
