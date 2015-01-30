@@ -8,33 +8,13 @@ Datastore::Datastore(void)
 
 Datastore::~Datastore(void)
 {
-	for(Transaction t : transactions)
-	{
-		delete[] t.items;
-	}
-}
-
-vector<int> Datastore::getSupportingSet(bool items[27])
-{
-	vector<int> result;
-	for(Transaction t : transactions)
-	{
-		if(Transaction::isSubset(items, t.items))
-			result.push_back(t.id);
-	}
-	return result;
-}
-
-int Datastore::getSupport(bool items[27])
-{
-	return getSupportingSet(items).size();
 }
 
 void Datastore::loadData()
 {
 	ifstream file = this->openDataFile();
 	string line;
-	Transaction t(27);
+	Transaction t;
 	int id = 1;
 	while(getline(file, line))
 	{
@@ -46,17 +26,10 @@ void Datastore::loadData()
 	file.close();
 }
 
-void Datastore::display()
-{
-	for(Transaction t : transactions)
-	{
-		t.display();
-	}
-}
-
 Transaction Datastore::createTransactionFromLine(string line)
 {
-	Transaction t(27);
+	Transaction t;
+	t.items.resize(ITEMS_SIZE, false);
 	auto start = 0U;
 	auto end = line.find(",");
 	string element;

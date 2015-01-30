@@ -1,23 +1,24 @@
 #pragma once
+#include <set>
 #include <vector>
 #include "Transaction.h"
+#include "GRMUtils.h"
 #include <fstream>
 #include <iostream>
 #include <string>
+#include "AbstractDatastore.h"
 
 using namespace std;
-class Datastore
+class Datastore : public AbstractDatastore
 {
 private:
-	vector<Transaction> transactions;
+	
 	ifstream openDataFile();
 	Transaction createTransactionFromLine(string line);
 public:
+	static const int ITEMS_SIZE = 27;
 	Datastore(void);
 	~Datastore(void);
 	void loadData();
-	int getSupport(bool items [27]); //zwraca wsparcie dla zbioru
-	vector<int> getSupportingSet(bool items [27]); //zwraca wektor id transakcji
-	void display();
 };
 
