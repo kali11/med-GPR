@@ -1,5 +1,6 @@
 #include "GRM.h"
 #include "TestDatastore.h"
+#include "GRMUtils.h"
 #include <algorithm>
 
 GRM::GRM(string fileName)

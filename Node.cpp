@@ -3,8 +3,8 @@
 
 Node::Node(void)
 {
-	groupId = -1;
-	oneClassOnly = true;
+    oneClassOnly = true;
+    groupId = -1;
 }
 
 Node::Node(const Node& n)
