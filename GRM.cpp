@@ -1,10 +1,13 @@
 #include "GRM.h"
+#include "TestDatastore.h"
 #include <algorithm>
 
-GRM::GRM(void)
+GRM::GRM(string fileName)
 {
+	this->fileName = fileName;
 	datastore = NULL;
 	root = shared_ptr<Node>(new Node());
+	root->items.insert(vector<bool>(Datastore::ITEMS_SIZE, false));
 }
 
 
@@ -16,6 +19,7 @@ GRM::~GRM(void)
 void GRM::GRMAlgoritm(unsigned minSup)
 {
 	Datastore* tictacDatastore = new Datastore();
+	tictacDatastore->fileName = this->fileName;
 	tictacDatastore->loadData();
     vector<Transaction>& transactions = tictacDatastore->transactions;
     vector<bool> temp;
@@ -25,9 +29,7 @@ void GRM::GRMAlgoritm(unsigned minSup)
 	this->datastore = tictacDatastore;
 
 	if(transactions.size() > minSup)
-	{
-        root->items.clear();
-        
+	{   
         for (int i = 0; i < Datastore::ITEMS_SIZE; ++i) {
             sup = 0;
             temp.clear();
@@ -41,7 +43,7 @@ void GRM::GRMAlgoritm(unsigned minSup)
                 }
             }
 
-            if (sup > minSup && sup < transactions.size()) {
+            if (sup > minSup) {
                 shared_ptr<Node> N(new Node);
                 temp[i] = true;
                 N->items.insert(temp);
@@ -52,6 +54,7 @@ void GRM::GRMAlgoritm(unsigned minSup)
         }
 		GARM(root, minSup);
     }
+	fillMetadata(root);
 }
 
 void GRM::GARM(shared_ptr<Node> n, unsigned minSup)
@@ -67,7 +70,8 @@ void GRM::GARM(shared_ptr<Node> n, unsigned minSup)
         //temp = n->items;
         //n->items.clear();
         //set_union(temp.begin(), temp.end(), n->children[i]->items.begin(), n->children[i]->items.end(), inserter(n->items, n->items.end()));
-		n->children[i]->items = GRMUtils::addList2ToList1(n->children[i]->items, n->items);
+		//n->children[i]->items = GRMUtils::addList2ToList1(n->children[i]->items, n->items);
+		n->children[i]->cartesianProduct(n->items);
 
         for (int j = 0; j < n->children[i]->children.size(); ++j) {
             if (n->children[i]->children[j]->transactionList.size() <= minSup) {
@@ -76,7 +80,7 @@ void GRM::GARM(shared_ptr<Node> n, unsigned minSup)
                 //n->children[i]->children[j]->items.clear();
 				//std::insert_iterator<set<vector<bool>>> x = inserter(n->children[i]->children[j]->items, n->children[i]->children[j]->items.begin());
                 //set_union(temp.begin(), temp.end(), n->children[i]->items.begin(), n->children[i]->items.end(), x);
-				n->children[i]->children[j]->items = GRMUtils::addList2ToList1(n->children[i]->children[j]->items, n->children[i]->items);
+				n->children[i]->children[j]->cartesianProduct(n->children[i]->items);
 				n->children[i]->children.erase(n->children[i]->children.begin() + j);
                 --j;
             }
@@ -98,12 +102,32 @@ void GRM::GarmProperty(shared_ptr<Node> n, shared_ptr<Node> ln, shared_ptr<Node>
 	}
 	if(!GRMUtils::isSubsetOfTransactionList((*ln).transactionList, (*rn).transactionList))
 	{
-		Node* node = new Node();
+		Node* node = new Node(*rn);
 		node->transactionList = GRMUtils::getListProduct((*ln).transactionList, (*rn).transactionList);
-		memcpy(node, &(*rn), sizeof(node));
-		node->cartesianProduct((*ln).items);
 		shared_ptr<Node> node_ptr(node);
 		(*ln).children.push_back(node_ptr);
 
 	}
+}
+
+void GRM::fillMetadata(shared_ptr<Node> n)
+{
+	if (n->items.size() > 0) {
+		for (auto t : datastore->transactions) {
+			if (GRMUtils::isSubsetOfItems(*(n->items.begin()), t.items)) {
+				if (n->groupId == -1)
+					n->groupId = t.group;
+				else if (n->groupId != t.group) {
+					n->oneClassOnly = false;
+					break;
+				}
+			}
+		}
+	}
+
+	if (n->oneClassOnly)
+		preds.insert(n);
+
+	for (auto c : n->children)
+		fillMetadata(c);
 }

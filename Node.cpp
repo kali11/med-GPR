@@ -3,8 +3,20 @@
 
 Node::Node(void)
 {
+	groupId = -1;
+	oneClassOnly = true;
 }
 
+Node::Node(const Node& n)
+{
+	items = n.items;
+	parent = n.parent;
+	children = n.children;
+	transactionList = n.transactionList;
+
+	groupId = n.groupId;
+	oneClassOnly = n.oneClassOnly;
+}
 
 Node::~Node(void)
 {
@@ -17,6 +29,7 @@ void Node::removeChild(shared_ptr<Node> toRemove)
 		if(*it == toRemove)
 		{
 			children.erase(it);
+			break;
 		}
 	}
 }
@@ -32,11 +45,5 @@ void Node::cartesianProduct(set<vector<bool>> itemsToAdd)
 			result.insert(GRMUtils::joinItems(*it, *it2));
 		}
 	}
-	if(items.size() > 0)
-		items.clear();
-
-	for(auto it = result.begin(); it != result.end(); ++it)
-	{
-		items.insert(*it);
-	}
+	items = result;
 }

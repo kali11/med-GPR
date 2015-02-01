@@ -1,10 +1,13 @@
 #include <iostream>
+#include <fstream>
 #include "Datastore.h"
 #include "AbstractDatastore.h"
 #include "TestDatastore.h"
 #include <vector>
 #include <set>
 #include "GRM.h"
+#include <time.h>
+#include <sys\timeb.h> 
 
 using namespace std;
 
@@ -12,12 +15,32 @@ void tests();
 
 int main(int argc, char *argv[])
 {
-	cout << "main" << endl;
+	string fileName, outFileName;
+	struct timeb start, end;
+	int time_diff;
+	cout << "Podaj nazwe pliku z danymi: ";
+	cin >> fileName;
+	cout << "Podaj nazwe pliku wynikowego: ";
+	cin >> outFileName;
+
+	ofstream of(outFileName.c_str(), ios_base::out);
 
 	//tests();
-	GRM grm;
-	grm.GRMAlgoritm(1);
-	system("PAUSE");
+	ftime(&start);
+	GRM grm(fileName);
+	grm.GRMAlgoritm(0);
+	ftime(&end);
+	time_diff = (int) (1000.0 * (end.time - start.time) + (end.millitm - start.millitm));
+	for (auto n : grm.getPreds()) {
+		for (auto v : n->items) {
+			of << "; ";
+			for (int i = 0; i < v.size(); ++i)
+				of << v[i] << ", ";
+		}
+		of << " -> " << n->groupId << ";" << endl;
+	}
+	cout << "Czas dzialania algorytmu w ms: " << time_diff << endl;
+	of.close();
 	return 0;
 }
 

@@ -11,13 +11,17 @@ class GRM
 {
 private:
 	set<vector<bool>> FG;
+	set<shared_ptr<Node>> preds;
     shared_ptr<Node> root;
 	AbstractDatastore* datastore;
 public:
-	GRM(void);
+	string fileName;
+	GRM(string fileName);
 	~GRM(void);
 	void GRMAlgoritm(unsigned minSup);
     void GARM(shared_ptr<Node>, unsigned);
 	void GarmProperty(shared_ptr<Node> n, shared_ptr<Node> ln, shared_ptr<Node> rn);
+	void fillMetadata(shared_ptr<Node>);
+	set<shared_ptr<Node>> getPreds(void) { return preds; }
 };
 

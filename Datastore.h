@@ -16,7 +16,8 @@ private:
 	ifstream openDataFile();
 	Transaction createTransactionFromLine(string line);
 public:
-	static const int ITEMS_SIZE = 27;
+	string fileName;
+	static const int ITEMS_SIZE = 16;
 	Datastore(void);
 	~Datastore(void);
 	void loadData();

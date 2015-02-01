@@ -17,10 +17,11 @@ public:
 	vector<shared_ptr<Node>> children;
 	set<int> transactionList; // zbior id transakcjii
 
-    unsigned int groupId;
-    bool seenBefore;
+    int groupId;
+    bool oneClassOnly;
 
 	Node(void);
+	Node(const Node&);
 	~Node(void);
 	void cartesianProduct(set<vector<bool>> itemsToAdd);
 	void removeChild(shared_ptr<Node> toRemove);
