@@ -34,9 +34,9 @@ void Node::removeChild(shared_ptr<Node> toRemove)
 	}
 }
 
-void Node::cartesianProduct(set<vector<bool>> itemsToAdd)
+void Node::cartesianProduct(set<vector<pair<unsigned int, unsigned int>>> itemsToAdd)
 {
-	set<vector<bool>> result;
+	set<vector<pair<unsigned int, unsigned int>>> result;
 
 	for(auto it = items.begin(); it != items.end(); ++it)
 	{

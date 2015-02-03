@@ -10,49 +10,60 @@ Datastore::~Datastore(void)
 {
 }
 
-void Datastore::loadData()
+unsigned int Datastore::loadData(string fileName)
 {
-	ifstream file = this->openDataFile();
+	ifstream file = this->openDataFile(fileName);
 	string line;
-	Transaction t;
 	int id = 1;
+
+	char sep;
+	unsigned int width;
+
+	//header
+	file >> sep >> width;
+	getline(file, line);
+
+	constants.resize(width);
+
+	Transaction t(width);
+
 	while(getline(file, line))
 	{
-		t = createTransactionFromLine(line);
-		t.id = id;
+		t = createTransactionFromLine(line, sep, width);
+		t.id = id++;
 		transactions.push_back(t);
-		id++;
 	}
+
 	file.close();
+
+	return width;
 }
 
-Transaction Datastore::createTransactionFromLine(string line)
+Transaction Datastore::createTransactionFromLine(string line, char separator, unsigned int ncol)
 {
-	Transaction t;
-	t.items.resize(ITEMS_SIZE, false);
+	Transaction t(ncol);
+	t.items.resize(ncol, pair<unsigned int, unsigned int>(numeric_limits<unsigned int>::max(), numeric_limits<unsigned int>::max()));
 	auto start = 0U;
-	auto end = line.find(",");
+	auto end = line.find(separator);
 	string element;
-	for(int i = 0; i < ITEMS_SIZE / 2; i++)
+
+	for(int i = 0; i < ncol; i++)
 	{
 		element = line.substr(start, end - start);
 		start = end + 1;
-		end = line.find(",", start);
-		if(element == "0")
-			t.items[2*i] = true;
-		else if(element == "1")
-			t.items[2*i+1] = true;
+		end = line.find(separator, start);
 
-		if(line.substr(start, end) == "win")
-			t.group = 1;
-		else if (line.substr(start, end) == "loss")
-			t.group = 0;
-		else t.group = 2;
+		auto it = constants[i].insert(element).first;
+		t.items[i] = pair<unsigned int, unsigned int>(i, distance(constants[i].begin(), it));
 	}
+
+	auto it = constants[ncol - 1].insert(line.substr(start, end)).first;
+	t.group = distance(constants[ncol - 1].begin(), it);
+
 	return t;
 }
 
-ifstream Datastore::openDataFile()
+ifstream Datastore::openDataFile(string fileName)
 {
 	ifstream file;
 	file.open(fileName);

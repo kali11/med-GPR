@@ -10,7 +10,7 @@ AbstractDatastore::~AbstractDatastore(void)
 {
 }
 
-set<int> AbstractDatastore::getSupportingSet(vector<bool> items)
+set<int> AbstractDatastore::getSupportingSet(vector<pair<unsigned int, unsigned int>> items)
 {
 	set<int> result;
 	for(Transaction t : transactions)
@@ -21,7 +21,7 @@ set<int> AbstractDatastore::getSupportingSet(vector<bool> items)
 	return result;
 }
 
-int AbstractDatastore::getSupport(vector<bool> items)
+int AbstractDatastore::getSupport(vector<pair<unsigned int, unsigned int>> items)
 {
 	return getSupportingSet(items).size();
 }

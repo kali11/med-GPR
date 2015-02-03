@@ -9,17 +9,19 @@
 #include "AbstractDatastore.h"
 
 using namespace std;
+
 class Datastore : public AbstractDatastore
 {
 private:
 	
-	ifstream openDataFile();
-	Transaction createTransactionFromLine(string line);
+	ifstream openDataFile(string fileName);
+	Transaction createTransactionFromLine(string line, char separator, unsigned int ncol);
+
 public:
-	string fileName;
-	static const int ITEMS_SIZE = 16;
+
+	vector<set<string>> constants;
 	Datastore(void);
 	~Datastore(void);
-	void loadData();
+	unsigned int loadData(string fileName);
 };
 

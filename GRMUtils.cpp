@@ -1,4 +1,5 @@
 #include "GRMUtils.h"
+#include <cassert>
 
 
 GRMUtils::GRMUtils(void)
@@ -10,16 +11,12 @@ GRMUtils::~GRMUtils(void)
 {
 }
 
-bool GRMUtils::isSubsetOfItems(vector<bool> items1, vector<bool> items2)
+//if items1 is a subset of items2
+bool GRMUtils::isSubsetOfItems(vector<pair<unsigned int, unsigned int>> items1, vector<pair<unsigned int, unsigned int>> items2)
 {
-	if(items1.size() != items2.size())
-	{
-		cout << "Zla wielkosc wektorow items" << endl;
-		return false;
-	}
 	for(unsigned i = 0; i < items1.size(); i++)
 	{
-		if(items1[i] > items2[i]) return false;
+		if(find(items2.begin(), items2.end(), items1[i]) == items2.end()) return false;
 	}
 	return true;
 }
@@ -63,31 +60,26 @@ set<int> GRMUtils::getListProduct(set<int> list1, set<int> list2)
 	return result;
 }
 
-vector<bool> GRMUtils::joinItems(vector<bool> items1, vector<bool> items2)
+vector<pair<unsigned int, unsigned int>> GRMUtils::joinItems(vector<pair<unsigned int, unsigned int>> items1, vector<pair<unsigned int, unsigned int>> items2)
 {
-	vector<bool> result;
-	if(items1.size() != items2.size())
-	{
-		cout << "wektory nie sa rownej dlugosci" << endl;
-		return result;
-	}
-	for(int i = 0; i < items1.size(); ++i)
-	{
-		result.push_back(items1[i] || items2[i]);
-	}
-	return result;
+	vector<pair<unsigned int, unsigned int>> x(items1);
+	x.insert(x.end(), items2.begin(), items2.end());
+	return x;
 }
 
-set<vector<bool>> GRMUtils::addList2ToList1(set<vector<bool>> list1, set<vector<bool>> list2)
+set<vector<pair<unsigned int, unsigned int>>> GRMUtils::addList2ToList1(set<vector<pair<unsigned int, unsigned int>>> list1, set<vector<pair<unsigned int, unsigned int>>> list2)
 {
-	set<vector<bool>> result;
+	set<vector<pair<unsigned int, unsigned int>>> result;
+
 	for(auto it = list1.begin(); it != list1.end(); ++it)
 	{
 		result.insert(*it);
 	}
+
 	for(auto it = list2.begin(); it != list2.end(); ++it)
 	{
 		result.insert(*it);
 	}
+
 	return result;
 }

@@ -12,7 +12,7 @@ class Node
 private:
 
 public:
-	set<vector<bool>> items;
+	set<vector<pair<unsigned int, unsigned int>>> items;
 	shared_ptr<Node> parent;
 	vector<shared_ptr<Node>> children;
 	set<int> transactionList; // zbior id transakcjii
@@ -23,6 +23,6 @@ public:
 	Node(void);
 	Node(const Node&);
 	~Node(void);
-	void cartesianProduct(set<vector<bool>> itemsToAdd);
+	void cartesianProduct(set<vector<pair<unsigned int, unsigned int>>> itemsToAdd);
 	void removeChild(shared_ptr<Node> toRemove);
 };

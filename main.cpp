@@ -16,26 +16,29 @@ void tests();
 int main(int argc, char *argv[])
 {
 	string fileName, outFileName;
+	unsigned int minSup;
 	struct timeb start, end;
 	int time_diff;
 	cout << "Podaj nazwe pliku z danymi: ";
 	cin >> fileName;
 	cout << "Podaj nazwe pliku wynikowego: ";
 	cin >> outFileName;
+	cout << "Podaj minimalne wymagane wsparcie dla potencjalnych czestych generatorow: ";
+	cin >> minSup;
 
 	ofstream of(outFileName.c_str(), ios_base::out);
 
 	//tests();
 	ftime(&start);
 	GRM grm(fileName);
-	grm.GRMAlgoritm(0);
+	grm.GRMAlgoritm(minSup);
 	ftime(&end);
 	time_diff = (int) (1000.0 * (end.time - start.time) + (end.millitm - start.millitm));
 	for (auto n : grm.getPreds()) {
 		for (auto v : n->items) {
 			of << "; ";
 			for (int i = 0; i < v.size(); ++i)
-				of << v[i] << ", ";
+				of << v[i].second << ", ";
 		}
 		of << " -> " << n->groupId << ";" << endl;
 	}
@@ -44,7 +47,7 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-void tests()
+/*void tests()
 {
 	cout << "testy" << endl;
 
@@ -103,4 +106,4 @@ void tests()
 	// test getListProduct
 	if(GRMUtils::getListProduct(set1, set2).size() != 1) cout << "getListProduct ERROR" << endl;
 
-}
+}*/

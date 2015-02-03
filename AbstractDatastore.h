@@ -14,9 +14,9 @@ public:
 	vector<Transaction> transactions;
 	AbstractDatastore(void);
 	~AbstractDatastore(void);
-	virtual void loadData()=0;
-	int getSupport(vector<bool> items); //zwraca wsparcie dla zbioru
-	set<int> getSupportingSet(vector<bool> items); //zwraca wektor id transakcji
+	virtual unsigned int loadData(string)=0;
+	int getSupport(vector<pair<unsigned int, unsigned int>> items); //zwraca wsparcie dla zbioru
+	set<int> getSupportingSet(vector<pair<unsigned int, unsigned int>> items); //zwraca wektor id transakcji
 	void display();
 };
 

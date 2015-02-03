@@ -10,10 +10,11 @@
 class GRM
 {
 private:
-	set<vector<bool>> FG;
+	set<vector<pair<unsigned int, unsigned int>>> FG;
 	set<shared_ptr<Node>> preds;
     shared_ptr<Node> root;
 	AbstractDatastore* datastore;
+	unsigned int ncol;
 public:
 	string fileName;
 	GRM(string fileName);
