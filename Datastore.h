@@ -18,8 +18,6 @@ private:
 	Transaction createTransactionFromLine(string line, char separator, unsigned int ncol);
 
 public:
-
-	vector<set<string>> constants;
 	Datastore(void);
 	~Datastore(void);
 	unsigned int loadData(string fileName);

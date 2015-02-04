@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
 	cin >> outFileName;
 	cout << "Podaj minimalne wymagane wsparcie dla potencjalnych czestych generatorow: ";
 	cin >> minSup;
+	cout << endl;
 
 	ofstream of(outFileName.c_str(), ios_base::out);
 
@@ -36,11 +37,11 @@ int main(int argc, char *argv[])
 	time_diff = (int) (1000.0 * (end.time - start.time) + (end.millitm - start.millitm));
 	for (auto n : grm.getPreds()) {
 		for (auto v : n->items) {
-			of << "; ";
 			for (int i = 0; i < v.size(); ++i)
-				of << v[i].second << ", ";
+				of << v[i].first + 1 << "=" << grm.getDictionary()->at(v[i].first)[v[i].second] << ", ";
+			of << "; ";
 		}
-		of << " -> " << n->groupId << ";" << endl;
+		of << " -> " << grm.getDictionary()->at(grm.getNCol())[n->groupId] << ";" << endl;
 	}
 	cout << "Czas dzialania algorytmu w ms: " << time_diff << endl;
 	of.close();

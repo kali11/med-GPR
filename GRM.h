@@ -23,6 +23,8 @@ public:
     void GARM(shared_ptr<Node>, unsigned);
 	void GarmProperty(shared_ptr<Node> n, shared_ptr<Node> ln, shared_ptr<Node> rn);
 	void fillMetadata(shared_ptr<Node>);
+	vector<vector<string>>* getDictionary(void);
+	unsigned int getNCol(void);
 	set<shared_ptr<Node>> getPreds(void) { return preds; }
 };
 

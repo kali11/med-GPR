@@ -9,7 +9,7 @@ class Transaction
 public:
 	int id;
 	vector<pair<unsigned int, unsigned int>> items;
-	unsigned int group;
+	int group;
 	Transaction(unsigned int ncol);
 	~Transaction(void);
 	void display();

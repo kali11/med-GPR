@@ -12,6 +12,7 @@ protected:
 	
 public:
 	vector<Transaction> transactions;
+	vector<vector<string>> constants;
 	AbstractDatastore(void);
 	~AbstractDatastore(void);
 	virtual unsigned int loadData(string)=0;

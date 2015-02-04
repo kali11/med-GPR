@@ -3,7 +3,9 @@
 
 Transaction::Transaction(unsigned int ncol)
 {
-	items.resize(ncol, pair<unsigned int, unsigned int>(numeric_limits<unsigned int>::max(), numeric_limits<unsigned int>::max()));
+	items.resize(ncol);
+	group = -1;
+	id = -1;
 }
 
 
