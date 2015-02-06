@@ -20,6 +20,8 @@ Node::Node(const Node& n)
 
 Node::~Node(void)
 {
+	for (auto c : children)
+		c.reset();
 }
 
 void Node::removeChild(shared_ptr<Node> toRemove)

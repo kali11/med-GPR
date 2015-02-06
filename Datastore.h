@@ -15,7 +15,8 @@ class Datastore : public AbstractDatastore
 private:
 	
 	ifstream openDataFile(string fileName);
-	Transaction createTransactionFromLine(string line, char separator, unsigned int ncol);
+	Transaction createTransactionFromLine(string line, char separator, unsigned int ncol, unsigned int decix);
+
 
 public:
 	Datastore(void);

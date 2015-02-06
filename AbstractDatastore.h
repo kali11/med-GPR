@@ -13,6 +13,7 @@ protected:
 public:
 	vector<Transaction> transactions;
 	vector<vector<string>> constants;
+	unsigned int decix;
 	AbstractDatastore(void);
 	~AbstractDatastore(void);
 	virtual unsigned int loadData(string)=0;

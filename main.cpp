@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "Datastore.h"
 #include "AbstractDatastore.h"
 #include "TestDatastore.h"
@@ -15,96 +16,71 @@ void tests();
 
 int main(int argc, char *argv[])
 {
-	string fileName, outFileName;
+	string confFileName;
+	ifstream confFile;
+
+	string fileName, outFileName, outReducedFileName, temp;
+	stringstream outLine;
 	unsigned int minSup;
-	struct timeb start, end;
-	int time_diff;
-	cout << "Podaj nazwe pliku z danymi: ";
-	cin >> fileName;
-	cout << "Podaj nazwe pliku wynikowego: ";
-	cin >> outFileName;
-	cout << "Podaj minimalne wymagane wsparcie dla potencjalnych czestych generatorow: ";
-	cin >> minSup;
-	cout << endl;
 
-	ofstream of(outFileName.c_str(), ios_base::out);
+	//load config
+	if (argc == 2)
+		confFileName = string(argv[1]);
+	else
+		confFileName = "medconf.ini";
+		
+	confFile.open(confFileName, ios_base::in);
+	if (confFile.is_open())
+		confFile >> fileName >> outFileName >> outReducedFileName >> minSup;
+	else {
+		cout << "Podaj nazwê pliku z danymi: ";
+		cin >> fileName;
+		cout << "Podaj nazwê pliku wynikowego dla wszystkich regu³: ";
+		cin >> outFileName;
+		cout << "Podaj nazwê pliku wynikowego dla zredukowanego zbioru regu³: ";
+		cin >> outReducedFileName;
+		cout << "Podaj minimalne wymagane wsparcie dla potencjalnych czêstych generatorów: ";
+		cin >> minSup;
+	}
 
-	//tests();
-	ftime(&start);
+	ofstream of(outFileName, ios_base::out);
+	ofstream orf(outReducedFileName, ios_base::out);
+
 	GRM grm(fileName);
 	grm.GRMAlgoritm(minSup);
-	ftime(&end);
-	time_diff = (int) (1000.0 * (end.time - start.time) + (end.millitm - start.millitm));
+
+	of << "Zbiór regu³ decyzyjnych wygenerowanych ze zbioru " << fileName << ":" << endl;
+	orf << "Zredukowany zbiór regu³ decyzyjnych wygenerowanych ze zbioru " << fileName << ":" << endl;
+
 	for (auto n : grm.getPreds()) {
 		for (auto v : n->items) {
-			for (int i = 0; i < v.size(); ++i)
-				of << v[i].first + 1 << "=" << grm.getDictionary()->at(v[i].first)[v[i].second] << ", ";
-			of << "; ";
+			outLine.str("");
+			for (unsigned int i = 0; i < v.size(); ++i)
+				outLine << v[i].first + 1 << " = " << grm.getDictionary()->at(v[i].first)[v[i].second] << ", ";
+			temp = outLine.str().substr(0, outLine.str().length() - 2);
+			outLine.str("");
+			outLine << temp << " -> " << grm.getDictionary()->at(grm.getDecix())[n->groupId];
+			of << outLine.str() << endl;
 		}
-		of << " -> " << grm.getDictionary()->at(grm.getNCol())[n->groupId] << ";" << endl;
 	}
-	cout << "Czas dzialania algorytmu w ms: " << time_diff << endl;
+
+	for (auto r : grm.getRPreds()) {
+		outLine.str("");
+		for (unsigned int i = 0; i < r.first.size(); ++i)
+			outLine << r.first[i].first + 1 << " = " << grm.getDictionary()->at(r.first[i].first)[r.first[i].second] << ", ";
+		temp = outLine.str().substr(0, outLine.str().length() - 2);
+		outLine.str("");
+		outLine << temp << " -> " << grm.getDictionary()->at(grm.getDecix())[r.second];
+		orf << outLine.str() << endl;
+	}
+
+	orf << endl;
+	orf << "Czas wczytywania danych: " << grm.tLoad << "ms." << endl;
+	orf << "Czas tworzenia drzewa potencjalnych generatorów: " << grm.tGRM << "ms." << endl;
+	orf << "Czas uzupe³niania informacji o rozró¿nialnoœci klas wzglêdem generatorów: " << grm.tMeta << "ms." << endl;
+	orf << "Czas wyodrêbniania i redukowania zbioru regu³ decyzyjnych: " << grm.tRules << "ms." << endl;
+
 	of.close();
+	orf.close();
 	return 0;
 }
-
-/*void tests()
-{
-	cout << "testy" << endl;
-
-	// test wczytywania danych i zamiany do postaci transakcyjnej
-	Datastore datastore;
-	datastore.loadData();
-
-	// test TestDatastore
-	TestDatastore testDatastore;
-	testDatastore.loadData();
-	testDatastore.display();
-
-	vector<bool> testItems;
-	testItems.resize(8, false);
-	testItems[7] = true;
-	if(testDatastore.getSupport(testItems) != 2)
-		cout << "getSupport() for testDatabase ERROR" << endl;
-
-	// testy liczenia wsparcia
-	vector<bool> items;// {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0,  0,1};
-	items.resize(27, false);
-	items[26] = true;
-	if(datastore.getSupport(items) != 205) cout << "getSupport() ERROR" << endl;
-
-	// testy getSupportingSet
-	vector<bool> example; //{1,0,0, 1,0,0, 1,0,0, 1,0,0, 0,1,0, 0,1,0, 1,0,0, 0,1,0, 0,1,0};
-	example.resize(27, false);
-	example[0] = example[3] = example[6] = example[9] = example[13] = example[16] = example[18] = example[22] = example[25] = true;
-	if(datastore.getSupportingSet(example).size() != 1) cout << "getSupportingSet() ERROR" << endl;
-
-	// testy isSubset()
-	vector<bool> bigset;
-	bigset.resize(27, false);
-	bigset[0] = bigset[1] = bigset[2] = bigset[26] = true;
-	if(!GRMUtils::isSubsetOfItems(items, bigset)) cout << "isSubset() ERROR" << endl;
-	bigset[26] = false;
-	if(GRMUtils::isSubsetOfItems(items, bigset)) cout << "isSubset() ERROR" << endl;
-
-	// testy isTransactionListsEqual
-	set<int> set1;
-	set1.insert(1);
-	set1.insert(2);
-	if(!GRMUtils::isTransactionListsEqual(set1, set1)) cout << "isTransactionListsEqual ERROR" << endl;
-
-	// testy isSubsetOfTransactionList
-	if(GRMUtils::isSubsetOfTransactionList(set1, set1)) cout << "isSubsetOfTransactionList ERROR" << endl;
-	set<int> set2;
-	set2.insert(1);
-	if(!GRMUtils::isSubsetOfTransactionList(set1, set2)) cout << "isSubsetOfTransactionList ERROR" << endl;
-	if(!GRMUtils::isSubsetOfTransactionList(set2, set1)) cout << "isSubsetOfTransactionList ERROR" << endl;
-	set2.insert(3);
-	if(GRMUtils::isSubsetOfTransactionList(set1, set2)) cout << "isSubsetOfTransactionList ERROR" << endl;
-	if(GRMUtils::isSubsetOfTransactionList(set2, set1)) cout << "isSubsetOfTransactionList ERROR" << endl;
-	cout << "koniec testow" << endl;
-
-	// test getListProduct
-	if(GRMUtils::getListProduct(set1, set2).size() != 1) cout << "getListProduct ERROR" << endl;
-
-}*/
