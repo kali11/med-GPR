@@ -19,6 +19,7 @@ public:
 
     int groupId;
     bool oneClassOnly;
+	unsigned int support;
 
 	Node(void);
 	Node(const Node&);

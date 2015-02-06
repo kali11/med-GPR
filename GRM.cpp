@@ -80,10 +80,10 @@ void GRM::GRMAlgoritm(unsigned minSup)
 		ftime(&start);
 		for (auto i : getPreds()) {
 			for (auto j : i->items) {
-				rPreds.push_back(make_pair(j, i->groupId));
+				rPreds.push_back(make_pair(j, make_pair(i->groupId, i->support)));
 			}
 		}
-		sort(rPreds.begin(), rPreds.end(), [](pair<vector<pair<unsigned int, unsigned int>>, unsigned int> x, pair<vector<pair<unsigned int, unsigned int>>, unsigned int> y){ return x.first.size() < y.first.size(); });
+		sort(rPreds.begin(), rPreds.end(), [](pair<vector<pair<unsigned int, unsigned int>>, pair<unsigned int, unsigned int>> x, pair<vector<pair<unsigned int, unsigned int>>, pair<unsigned int, unsigned int>> y){ return x.first.size() < y.first.size(); });
 
 		for (unsigned int i = 0; i < rPreds.size(); ++i) {
 			ruleIndices.clear();
@@ -183,6 +183,7 @@ void GRM::fillMetadata(shared_ptr<Node> n)
 	}
 
 	if (n->groupId != -1 && n->oneClassOnly) {
+		n->support = datastore->getSupport(*(n->items.begin()));
 		preds.insert(n);
 		for (auto c : n->children)
 			c.reset();

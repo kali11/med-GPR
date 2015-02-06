@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 				outLine << v[i].first + 1 << " = " << grm.getDictionary()->at(v[i].first)[v[i].second] << ", ";
 			temp = outLine.str().substr(0, outLine.str().length() - 2);
 			outLine.str("");
-			outLine << temp << " -> " << grm.getDictionary()->at(grm.getDecix())[n->groupId];
+			outLine << temp << " -> " << grm.getDictionary()->at(grm.getDecix())[n->groupId] << " (" << n->support << ")";
 			of << outLine.str() << endl;
 		}
 	}
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 			outLine << r.first[i].first + 1 << " = " << grm.getDictionary()->at(r.first[i].first)[r.first[i].second] << ", ";
 		temp = outLine.str().substr(0, outLine.str().length() - 2);
 		outLine.str("");
-		outLine << temp << " -> " << grm.getDictionary()->at(grm.getDecix())[r.second];
+		outLine << temp << " -> " << grm.getDictionary()->at(grm.getDecix())[r.second.first] << " (" << r.second.second << ")";
 		orf << outLine.str() << endl;
 	}
 
